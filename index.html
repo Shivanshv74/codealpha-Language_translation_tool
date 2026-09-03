@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tongue &mdash; Language Translation Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <span class="masthead__mark">译 · अ · A</span>
+    <h1 class="masthead__title">Tongue</h1>
+    <p class="masthead__subtitle">A small page for moving words between languages.</p>
+  </header>
+
+  <main class="book" role="main">
+
+    <!-- LEFT PAGE: source -->
+    <section class="page page--left" aria-label="Source text">
+      <div class="page__head">
+        <label class="page__label" for="sourceLang">From</label>
+        <select id="sourceLang" class="lang-select"></select>
+      </div>
+
+      <textarea
+        id="sourceText"
+        class="page__text"
+        placeholder="Start typing, or paste a passage here…"
+        maxlength="500"
+        spellcheck="true"
+      ></textarea>
+
+      <div class="page__foot">
+        <button type="button" id="speakSource" class="icon-btn" title="Listen to source text">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          Listen
+        </button>
+        <span id="charCount" class="char-count">0 / 500</span>
+      </div>
+    </section>
+
+    <!-- SPINE -->
+    <div class="spine">
+      <button type="button" id="swapBtn" class="swap-btn" title="Swap languages" aria-label="Swap source and target languages">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M7 7h11l-3-3M17 17H6l3 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" id="translateBtn" class="translate-btn">Translate</button>
+    </div>
+
+    <!-- RIGHT PAGE: target -->
+    <section class="page page--right" aria-label="Translated text">
+      <div class="page__head">
+        <label class="page__label" for="targetLang">Into</label>
+        <select id="targetLang" class="lang-select"></select>
+      </div>
+
+      <div id="targetText" class="page__text page__text--output" aria-live="polite">
+        <span class="placeholder">Your translation will appear here.</span>
+      </div>
+
+      <div class="page__foot">
+        <button type="button" id="speakTarget" class="icon-btn" title="Listen to translation">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          Listen
+        </button>
+        <button type="button" id="copyBtn" class="icon-btn" title="Copy translation">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 16V5.5A1.5 1.5 0 0 1 6.5 4H15" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          <span id="copyLabel">Copy</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <p id="statusLine" class="status-line" role="status" aria-live="polite"></p>
+
+  <footer class="footer">
+    Translations powered by the MyMemory Translation API. Free tier — best for short passages.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
