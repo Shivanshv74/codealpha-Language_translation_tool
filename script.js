@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------
 // Language list: [ code, label, speech-synthesis locale ]
-// Codes follow what the MyMemory Translation API expects.
+// Codes are accepted by the translation provider and speech synthesis.
 // ---------------------------------------------------------------
 const LANGUAGES = [
   ["en", "English", "en-US"],
@@ -80,6 +80,20 @@ function setStatus(message, isError = false) {
   statusLine.classList.toggle("is-error", isError);
 }
 
+function translationFromGoogle(data) {
+  const segments = Array.isArray(data?.[0]) ? data[0] : [];
+  const result = segments
+    .filter((segment) => Array.isArray(segment) && typeof segment[0] === "string")
+    .map((segment) => segment[0])
+    .join("");
+
+  if (!result.trim()) {
+    throw new Error("Unexpected response from translation service.");
+  }
+
+  return result;
+}
+
 // ---------------------------------------------------------------
 // Translate
 // ---------------------------------------------------------------
@@ -104,7 +118,7 @@ async function translate() {
   setStatus("Contacting translation service…");
 
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(from)}&tl=${encodeURIComponent(to)}&dt=t&q=${encodeURIComponent(text)}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -112,12 +126,7 @@ async function translate() {
     }
 
     const data = await response.json();
-
-    if (!data || !data.responseData || typeof data.responseData.translatedText !== "string") {
-      throw new Error("Unexpected response from translation service.");
-    }
-
-    const result = data.responseData.translatedText;
+    const result = translationFromGoogle(data);
     lastTranslation = result;
     targetText.textContent = result;
     setStatus("Translated.");
@@ -125,7 +134,7 @@ async function translate() {
     console.error(err);
     targetText.innerHTML = '<span class="placeholder">Translation failed. Please try again.</span>';
     lastTranslation = "";
-    setStatus("Something went wrong reaching the translation service. Check your connection and try again.", true);
+    setStatus("Translation service unavailable. Check your connection and try again.", true);
   } finally {
     translateBtn.disabled = false;
     translateBtn.textContent = "Translate";
